@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "platform": "MediCore",
+  "tenant": {
+    "id": "sp-mediclinic",
+    "displayName": "SP Mediclinic",
+    "legalName": "SP Mediclinic",
+    "tagline": "Diagnostic & Polyclinic Centre",
+    "branding": {
+      "mode": "refreshed",
+      "logo": null,
+      "primary": "#087e78",
+      "secondary": "#12a39a",
+      "ink": "#173b42",
+      "background": "#f3f8f7",
+      "surface": "#ffffff",
+      "note": "Temporary modern healthcare palette; replace with sampled official brand colours after logo asset confirmation."
+    },
+    "enabledCentreIds": [
+      "kali-park",
+      "gouranganagar"
+    ]
+  },
+  "centres": [
+    {
+      "id": "kali-park",
+      "name": "Kali Park Centre",
+      "address": "Block A, 1st Floor, Ambey Florence, beside Silver Oak Apartments, Rajarhat Main Road, Kali Park, Salua, Kolkata 700136",
+      "phone": [
+        "9836932000"
+      ]
+    },
+    {
+      "id": "gouranganagar",
+      "name": "Gouranganagar Centre",
+      "address": "Rohra Niwas, 91 Adarshapally Road, Gouranganagar Dhalai Rasta, Ghuni, Kolkata 700162",
+      "phone": [
+        "8100854601",
+        "8100854602",
+        "8100854603"
+      ]
+    }
+  ],
+  "specialities": [
+    "Pathology",
+    "Gynaecology & Obstetrics",
+    "Orthopaedics",
+    "Paediatrics",
+    "General Medicine",
+    "General Surgery",
+    "Cardiology",
+    "Neurology",
+    "Nephrology",
+    "Urology",
+    "Dermatology",
+    "ENT",
+    "Psychiatry"
+  ],
+  "modules": {
+    "appointments": true,
+    "patientRecords": true,
+    "doctorWorkspace": true,
+    "diagnosticReports": true,
+    "multiCentre": true,
+    "patientAndroidApp": true,
+    "pharmacy": false,
+    "homeCollection": true
+  },
+  "roles": [
+    "platform_admin",
+    "clinic_admin",
+    "doctor",
+    "receptionist",
+    "diagnostic_staff",
+    "patient"
+  ],
+  "security": {
+    "patientDataPrivate": true,
+    "requireAuthentication": true,
+    "enforceTenantIsolation": true,
+    "enforceCentreAndRolePermissions": true,
+    "auditSensitiveRecordAccess": true,
+    "publicReportUrls": false
+  },
+  "dataStatus": {
+    "doctorsAndSchedules": "requires-clinic-verification",
+    "testCatalogueAndPrices": "requires-clinic-verification",
+    "reportStorage": "not-configured",
+    "firebaseAuthAndFirestore": "project-created; application integration pending"
+  }
+}
