@@ -9,12 +9,12 @@
     "branding": {
       "mode": "refreshed",
       "logo": null,
-      "primary": "#087e78",
-      "secondary": "#12a39a",
-      "ink": "#173b42",
-      "background": "#f3f8f7",
+      "primary": "#a91f3d",
+      "secondary": "#c73552",
+      "ink": "#182a40",
+      "background": "#fbfaf8",
       "surface": "#ffffff",
-      "note": "Temporary modern healthcare palette; replace with sampled official brand colours after logo asset confirmation."
+      "note": "Refreshed provisional SP Mediclinic red palette used by the Patient App; confirm exact official brand colours when logo assets are supplied."
     },
     "enabledCentreIds": [
       "kali-park",
@@ -86,6 +86,6 @@
     "doctorsAndSchedules": "requires-clinic-verification",
     "testCatalogueAndPrices": "requires-clinic-verification",
     "reportStorage": "not-configured",
-    "firebaseAuthAndFirestore": "project-created; application integration pending"
+    "firebaseAuthAndFirestore": "web app integration added; Firestore rules supplied and require publication in Firebase Console"
   }
 }
