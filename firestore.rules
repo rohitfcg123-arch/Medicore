@@ -41,9 +41,15 @@ service cloud.firestore {
         ]);
       allow read: if (signedIn() && resource.data.patientUid == request.auth.uid)
         || isTenantStaff(tenantId);
-      // Reception workflow will be implemented with trusted server-side functions.
-      // Patients cannot approve, cancel, assign tokens, or edit submitted requests.
-      allow update, delete: if false;
+      // Only authorised clinic staff can process appointment requests.
+      // Patient accounts cannot modify submitted requests or assign themselves tokens.
+      allow update: if isTenantStaff(tenantId);
+      allow delete: if false;
+    }
+
+    match /tenants/{tenantId}/counters/{counterId} {
+      allow read, create, update: if isTenantStaff(tenantId);
+      allow delete: if false;
     }
 
     match /tenants/{tenantId}/patients/{patientId} {
