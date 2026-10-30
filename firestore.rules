@@ -15,6 +15,11 @@ service cloud.firestore {
         && userDoc().tenantId == tenantId
         && userDoc().role == 'patient';
     }
+    function isReceptionStaff(tenantId) {
+      return signedIn()
+        && userDoc().tenantId == tenantId
+        && userDoc().role in ['clinic_admin', 'receptionist'];
+    }
 
     match /users/{uid} {
       allow create: if signedIn() && request.auth.uid == uid
@@ -43,12 +48,12 @@ service cloud.firestore {
         || isTenantStaff(tenantId);
       // Only authorised clinic staff can process appointment requests.
       // Patient accounts cannot modify submitted requests or assign themselves tokens.
-      allow update: if isTenantStaff(tenantId);
+      allow update: if isReceptionStaff(tenantId);
       allow delete: if false;
     }
 
     match /tenants/{tenantId}/counters/{counterId} {
-      allow read, create, update: if isTenantStaff(tenantId);
+      allow read, create, update: if isReceptionStaff(tenantId);
       allow delete: if false;
     }
 
