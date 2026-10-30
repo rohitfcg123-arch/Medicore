@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isTenantStaff(tenantId) {
+      return signedIn()
+        && userDoc().tenantId == tenantId
+        && userDoc().role in ['clinic_admin', 'receptionist', 'doctor', 'diagnostic_staff'];
+    }
+    function isPatient(tenantId) {
+      return signedIn()
+        && userDoc().tenantId == tenantId
+        && userDoc().role == 'patient';
+    }
+
+    match /users/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'patient'
+        && request.resource.data.tenantId == 'sp-mediclinic';
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.tenantId == resource.data.tenantId
+        && request.resource.data.uid == resource.data.uid;
+      allow delete: if false;
+    }
+
+    match /tenants/{tenantId}/appointments/{appointmentId} {
+      allow create: if isPatient(tenantId)
+        && request.resource.data.patientUid == request.auth.uid
+        && request.resource.data.tenantId == tenantId
+        && request.resource.data.status == 'requested'
+        && request.resource.data.tokenNumber == null
+        && request.resource.data.keys().hasAll([
+          'patientUid', 'patientName', 'patientPhone', 'centreId',
+          'serviceType', 'preferredDate', 'preferredTime', 'status', 'createdAt'
+        ]);
+      allow read: if (signedIn() && resource.data.patientUid == request.auth.uid)
+        || isTenantStaff(tenantId);
+      // Reception workflow will be implemented with trusted server-side functions.
+      // Patients cannot approve, cancel, assign tokens, or edit submitted requests.
+      allow update, delete: if false;
+    }
+
+    match /tenants/{tenantId}/patients/{patientId} {
+      allow read: if signedIn() && (request.auth.uid == patientId || isTenantStaff(tenantId));
+      allow create: if isPatient(tenantId) && request.auth.uid == patientId;
+      allow update: if signedIn() && request.auth.uid == patientId;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
